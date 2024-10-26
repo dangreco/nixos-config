@@ -28,6 +28,17 @@
   # Use proper graphics driver
   boot.kernelParams = [ "i915.force_probe=46a6" ];
 
+  # LUKS
+  boot.initrd.luks.devices = {
+    crypted = {
+      device = "/dev/disk/by-uuid/492d2666-150e-4905-a731-283e0f6eaa10";
+      preLVM = true;
+      allowDiscards = true;
+      keyFileSize = 4096;
+      keyFile = "/dev/disk/by-id/usb-VendorCo_ProductCode_92070152A3542222432-0:0";
+    };
+  };
+
   # Weekly garbage collection
   nix.gc = {
     automatic = lib.mkDefault true;

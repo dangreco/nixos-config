@@ -55,4 +55,7 @@
   # Security
   security.rtkit.enable = true;
   security.polkit.enable = true;
+  
+  # GNUPG
+  programs.gnupg.agent.enable = true;
 }
