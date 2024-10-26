@@ -1,6 +1,7 @@
 { pkgs, ... }: {
   imports = [ 
     ./global
+    ../common/apps/_1password.nix
     ../common/apps/gnome-tweaks.nix
     ../common/browsers/firefox.nix
     ../common/themes/firefox-gnome-theme.nix
