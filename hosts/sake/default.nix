@@ -11,6 +11,7 @@
 
     ../common/optional/cups.nix
     ../common/optional/dconf.nix
+    ../common/optional/flatpak.nix
     ../common/optional/fonts.nix
     ../common/optional/ntp.nix
 
