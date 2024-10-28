@@ -6,6 +6,7 @@
     ../common/browsers/firefox.nix
     ../common/themes/firefox-gnome-theme.nix
     ../common/themes/kora.nix
+    ../common/editors/eclipse.nix
     ../common/editors/vscode.nix
   ];
 

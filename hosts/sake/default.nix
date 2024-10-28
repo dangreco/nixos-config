@@ -46,5 +46,13 @@
     options = lib.mkDefault "--delete-older-than 7d";
   };
 
+  # Trusted users
+  nix.extraOptions = ''
+    trusted-users = root dan
+  '';
+
+  # Docker
+  virtualisation.docker.enable = true;
+
   system.stateVersion = "24.05";
 }

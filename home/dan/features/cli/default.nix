@@ -6,6 +6,8 @@
   home.packages = with pkgs; [
     fd
     jq
+    direnv
+    devenv
 
     nixd
     alejandra

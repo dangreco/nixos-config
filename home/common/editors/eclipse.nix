@@ -1,0 +1,3 @@
+{
+  programs.eclipse.enable = true;
+}
