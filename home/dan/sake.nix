@@ -8,6 +8,7 @@
     ../common/themes/kora.nix
     ../common/editors/eclipse.nix
     ../common/editors/vscode.nix
+    ../common/terminal-emulators/alacritty.nix
   ];
 
   dconf = {
@@ -22,6 +23,9 @@
       };
       "org/gnome/desktop/interface" = {
         show-battery-percentage = true;
+      };
+      "org/gnome/desktop/peripherals/touchpad" = {
+        tap-to-click = false;
       };
     };
   };

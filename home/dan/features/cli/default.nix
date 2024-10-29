@@ -8,6 +8,7 @@
     jq
     direnv
     devenv
+    xorg.xhost
 
     nixd
     alejandra
