@@ -8,7 +8,7 @@
     ../common/themes/kora.nix
     ../common/editors/eclipse.nix
     ../common/editors/vscode.nix
-    ../common/terminal-emulators/alacritty.nix
+    ../common/terminal-emulators/blackbox.nix
   ];
 
   dconf = {
