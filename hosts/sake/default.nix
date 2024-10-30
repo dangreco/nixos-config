@@ -28,14 +28,29 @@
   # Use proper graphics driver
   boot.kernelParams = [ "i915.force_probe=46a6" ];
 
+  # yubikey
+  boot.initrd.kernelModules = [ "vfat" "nls_cp437" "nls_iso8859-1" "usbhid" ];
+  boot.initrd.luks.yubikeySupport = true;
+
   # LUKS
   boot.initrd.luks.devices = {
     crypted = {
       device = "/dev/disk/by-uuid/492d2666-150e-4905-a731-283e0f6eaa10";
       preLVM = true;
       allowDiscards = true;
-      keyFileSize = 4096;
-      keyFile = "/dev/disk/by-id/usb-VendorCo_ProductCode_92070152A3542222432-0:0";
+      yubikey = {
+        slot = 2;
+        twoFactor = true;
+        gracePeriod = 30;
+        keyLength = 64;
+        saltLength = 64;
+        
+        storage = {
+          device = "/dev/disk/by-uuid/E074-F678";
+          fsType = "vfat";
+          path = "/crypt-storage/default";
+        };
+      };
     };
   };
 
