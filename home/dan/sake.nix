@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, lib, ... }: 
+{
   imports = [ 
     ./global
     ../common/apps/_1password.nix
@@ -13,9 +14,9 @@
 
   dconf = {
     enable = true;
-    settings = {
+    settings = with lib.hm.gvariant; {
       "org/gnome/desktop/session" = {
-        idle-delay = 0;
+        idle-delay = mkUint32 0;
       };
       "org/gnome/settings-daemon/plugins/power" = {
         idle-dim = false;
@@ -27,6 +28,16 @@
       "org/gnome/desktop/peripherals/touchpad" = {
         tap-to-click = false;
       };
+      "com/raggesilver/BlackBox" = 
+        let 
+          padding = mkUint32 12;
+        in
+        {
+          font = "JetBrainsMono Nerd Font Mono 10";
+          cursor-shape = mkUint32 1; # IBeam
+          terminal-bell = false;
+          terminal-padding = mkTuple [ padding padding padding padding ];
+        };
     };
   };
 }
