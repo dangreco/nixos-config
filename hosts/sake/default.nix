@@ -20,6 +20,7 @@
     ../common/optional/boot/quietboot.nix
     ../common/optional/desktop/gnome.nix
     ../common/optional/network/networkmanager.nix
+    ../common/optional/peripherals/fprintd.nix
     ../common/optional/peripherals/trackpoint.nix
   ];
 
