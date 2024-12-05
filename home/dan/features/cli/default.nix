@@ -17,5 +17,6 @@
     nix-diff
     nix-output-monitor
     nh
+    esptool
   ];
 }

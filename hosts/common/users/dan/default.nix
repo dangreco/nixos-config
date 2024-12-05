@@ -20,6 +20,7 @@ in
       "podman"
       "video"
       "wheel"
+      "dialout"
     ];
 
     packages = with pkgs; [

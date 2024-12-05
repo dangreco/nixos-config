@@ -48,6 +48,12 @@ in
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/1password-x-password-manager/latest.xpi";
           installation_mode = "force_installed";
         };
+
+        # WebSerial
+        "webserial@kuba2k2.github.io" = {
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/webserial-for-firefox/latest.xpi";
+          installation_mode = "force_installed";
+         };
       };
 
       Preferences = { 

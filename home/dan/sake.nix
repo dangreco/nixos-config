@@ -12,6 +12,10 @@
     ../common/terminal-emulators/blackbox.nix
   ];
 
+  home.packages = with pkgs; [
+    vice
+  ];
+
   dconf = {
     enable = true;
     settings = with lib.hm.gvariant; {
