@@ -5,21 +5,16 @@
   ...
 }:
 let
-  cfg = config.opt.ptyxis;
+  id = "ptyxis";
+  pkg = "ptyxis";
+  name = "ptyxis";
+  cfg = config.opt.${id};
 in
 {
   options = {
-    opt.ptyxis = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Enable ptyxis";
-      };
-      package = lib.mkOption {
-        type = lib.types.nullOr lib.types.package;
-        default = _.pkgs.stable.ptyxis;
-        description = "ptyxis package to use";
-      };
+    opt.${id} = {
+      enable = lib.mkEnableOption name;
+      package = lib.mkPackageOption _.pkgs.stable pkg { };
     };
   };
 

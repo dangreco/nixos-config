@@ -1,14 +1,13 @@
 { lib, config, ... }:
 let
-  cfg = config.opt.system.gnome;
+  id = "gnome";
+  name = "Gnome";
+  cfg = config.opt.system.${id};
 in
 {
   options = {
-    opt.system.gnome = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-      };
+    opt.system.${id} = {
+      enable = lib.mkEnableOption name;
     };
   };
 

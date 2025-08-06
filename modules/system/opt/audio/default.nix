@@ -1,14 +1,13 @@
 { lib, config, ... }:
 let
-  cfg = config.opt.system.audio;
+  id = "audio";
+  name = "audio";
+  cfg = config.opt.system.${id};
 in
 {
   options = {
-    opt.system.audio = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-      };
+    opt.system.${id} = {
+      enable = lib.mkEnableOption name;
     };
   };
 

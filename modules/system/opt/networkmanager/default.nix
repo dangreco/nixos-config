@@ -1,14 +1,13 @@
 { lib, config, ... }:
 let
-  cfg = config.opt.system.networkmanager;
+  id = "nm";
+  name = "NetworkManager";
+  cfg = config.opt.system.${id};
 in
 {
   options = {
-    opt.system.networkmanager = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-      };
+    opt.system.${id} = {
+      enable = lib.mkEnableOption name;
     };
   };
 

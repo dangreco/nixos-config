@@ -5,21 +5,15 @@
   ...
 }:
 let
-  cfg = config.opt.fish;
+  id = "fish";
+  name = "fish";
+  cfg = config.opt.${id};
 in
 {
   options = {
-    opt.fish = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Enable fish";
-      };
-      package = lib.mkOption {
-        type = lib.types.nullOr lib.types.package;
-        default = _.pkgs.stable.fish;
-        description = "fish package to use";
-      };
+    opt.${id} = {
+      enable = lib.mkEnableOption name;
+      package = lib.mkPackageOption _.pkgs.stable id { };
     };
   };
 

@@ -1,7 +1,7 @@
 { lib, config, ... }:
 let
-  id = "printing";
-  name = "printing";
+  id = "docker";
+  name = "Docker";
   cfg = config.opt.services.${id};
 in
 {
@@ -12,6 +12,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.printing.enable = true;
+    virtualisation.docker = {
+      enable = true;
+    };
   };
 }

@@ -3,28 +3,25 @@
   lib,
   config,
   ...
-}:
+}@inputs:
 let
-  cfg = config.opt.zed;
+  id = "zed";
+  pkg = "zed-editor";
+  name = "Zed";
+  cfg = config.opt.${id};
 in
 {
   options = {
-    opt.zed = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Enable Zed";
-      };
-      package = lib.mkOption {
-        type = lib.types.nullOr lib.types.package;
-        default = _.pkgs.stable.zed-editor;
-        description = "Zed package to use";
-      };
+    opt.${id} = {
+      enable = lib.mkEnableOption name;
+      package = lib.mkPackageOption _.pkgs.stable pkg { };
+
       extensions = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [ ];
         description = "Zed extensions to install";
       };
+
       settings = {
         font = {
           ui = {
@@ -66,29 +63,68 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    programs.zed-editor = {
-      enable = true;
-      package = cfg.package;
-      extensions = cfg.extensions;
-      userSettings = {
-        ui_font_size = cfg.settings.font.ui.size;
-        buffer_font_size = cfg.settings.font.buffer.size;
-      }
-      // (with cfg.settings.theme.ui; {
-        theme = {
-          mode = "system";
+  config =
+    let
+      formatter = {
+        binary = "nixfmt";
+        arguments = [
+          "--quiet"
+          "--"
+        ];
+        package = _.pkgs.unstable.nixfmt;
+      };
+
+      lsps = import ./lsps.nix inputs;
+    in
+    lib.mkIf cfg.enable {
+      home.packages =
+        (with _.pkgs.stable; [
+          nil
+          nixd
+        ])
+        ++ [ formatter.package ]
+        ++ lsps.packages;
+
+      programs.zed-editor = {
+        enable = true;
+        package = cfg.package;
+        extensions = cfg.extensions;
+        userSettings = {
+          ui_font_size = cfg.settings.font.ui.size;
+          buffer_font_size = cfg.settings.font.buffer.size;
+
+          lsp = {
+            nil = {
+              initialization_options = {
+                formatting = {
+                  command = [ "${formatter.package}/bin/${formatter.binary}" ] ++ formatter.arguments;
+                };
+              };
+            };
+            nixd = {
+              initialization_options = {
+                formatting = {
+                  command = [ "${formatter.package}/bin/${formatter.binary}" ] ++ formatter.arguments;
+                };
+              };
+            };
+          }
+          // lsps.config;
         }
-        // (lib.optionalAttrs (light != null) { inherit light; })
-        // (lib.optionalAttrs (dark != null) { inherit dark; });
-      })
-      // (with cfg.settings.theme.icon; {
-        icon_theme = {
-          mode = "system";
-        }
-        // (lib.optionalAttrs (light != null) { inherit light; })
-        // (lib.optionalAttrs (dark != null) { inherit dark; });
-      });
+        // (with cfg.settings.theme.ui; {
+          theme = {
+            mode = "system";
+          }
+          // (lib.optionalAttrs (light != null) { inherit light; })
+          // (lib.optionalAttrs (dark != null) { inherit dark; });
+        })
+        // (with cfg.settings.theme.icon; {
+          icon_theme = {
+            mode = "system";
+          }
+          // (lib.optionalAttrs (light != null) { inherit light; })
+          // (lib.optionalAttrs (dark != null) { inherit dark; });
+        });
+      };
     };
-  };
 }

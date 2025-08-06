@@ -12,7 +12,7 @@
   # system
   opt.system.audio.enable = true;
   opt.system.gnome.enable = true;
-  opt.system.networkmanager.enable = true;
+  opt.system.nm.enable = true;
 
   opt.system.plymouth = {
     enable = true;
@@ -20,10 +20,11 @@
   };
 
   # services
+  opt.services.docker.enable = true;
   opt.services.printing.enable = true;
 
   # programs
-  opt.programs._1password = {
+  opt.programs.op = {
     enable = true;
     gui.enable = true;
     cli.enable = true;
@@ -34,8 +35,6 @@
     with _.pkgs.stable;
     [
       gh
-      nixd
-      nixfmt-rfc-style
     ]
   );
 

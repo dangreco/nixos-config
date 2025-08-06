@@ -5,26 +5,22 @@
   ...
 }:
 let
-  cfg = config.opt.git;
+  id = "git";
+  name = "git";
+  cfg = config.opt.${id};
 in
 {
   options = {
-    opt.git = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Enable Git";
-      };
-      package = lib.mkOption {
-        type = lib.types.nullOr lib.types.package;
-        default = _.pkgs.stable.git;
-        description = "Git package to use";
-      };
+    opt.${id} = {
+      enable = lib.mkEnableOption name;
+      package = lib.mkPackageOption _.pkgs.stable id { };
+
       lfs.enable = lib.mkOption {
         type = lib.types.bool;
         default = false;
         description = "Enable Git LFS";
       };
+
       user = {
         name = lib.mkOption {
           type = lib.types.nullOr lib.types.str;

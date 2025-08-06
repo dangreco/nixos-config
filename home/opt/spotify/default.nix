@@ -5,21 +5,16 @@
   ...
 }:
 let
-  cfg = config.opt.spotify;
+  id = "spotify";
+  pkg = "spotify";
+  name = "Spotify";
+  cfg = config.opt.${id};
 in
 {
   options = {
-    opt.spotify = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Enable Spotify";
-      };
-      package = lib.mkOption {
-        type = lib.types.nullOr lib.types.package;
-        default = _.pkgs.stable.spotify;
-        description = "Spotify package to use";
-      };
+    opt.${id} = {
+      enable = lib.mkEnableOption name;
+      package = lib.mkPackageOption _.pkgs.stable pkg { };
     };
   };
 

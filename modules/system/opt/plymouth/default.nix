@@ -1,18 +1,14 @@
 { lib, config, ... }:
 let
-  cfg = config.opt.system.plymouth;
+  id = "plymouth";
+  name = "Plymouth";
+  cfg = config.opt.system.${id};
 in
 {
   options = {
-    opt.system.plymouth = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-      };
-      luks.enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-      };
+    opt.system.${id} = {
+      enable = lib.mkEnableOption name;
+      luks.enable = lib.mkEnableOption "${name} LUKS support";
     };
   };
 

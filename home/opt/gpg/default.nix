@@ -5,21 +5,16 @@
   ...
 }:
 let
-  cfg = config.opt.gpg;
+  id = "gpg";
+  pkg = "gnupg";
+  name = "GnuPG";
+  cfg = config.opt.${id};
 in
 {
   options = {
-    opt.gpg = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Enable GnuPG";
-      };
-      package = lib.mkOption {
-        type = lib.types.nullOr lib.types.package;
-        default = _.pkgs.stable.gnupg;
-        description = "GnuPG package to use";
-      };
+    opt.${id} = {
+      enable = lib.mkEnableOption name;
+      package = lib.mkPackageOption _.pkgs.stable pkg { };
     };
   };
 

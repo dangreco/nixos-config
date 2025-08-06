@@ -1,5 +1,7 @@
 { _, ... }:
 {
+  opt.direnv.enable = true;
+
   opt.firefox = {
     enable = true;
     themes.gnome.enable = true;
@@ -18,8 +20,6 @@
   };
 
   opt.gnome = {
-    enable = true;
-
     features.fractionalScaling = true;
     features.variableRefreshRate = true;
 

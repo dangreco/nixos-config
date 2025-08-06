@@ -5,9 +5,9 @@
   ...
 }:
 let
-  id = "freecad";
-  pkg = "freecad";
-  name = "FreeCAD";
+  id = "direnv";
+  pkg = "direnv";
+  name = "direnv";
   cfg = config.opt.${id};
 in
 {
@@ -19,6 +19,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    programs.direnv = {
+      enable = true;
+      package = cfg.package;
+      nix-direnv = {
+        enable = true;
+        package = _.pkgs.stable.nix-direnv;
+      };
+    };
   };
 }

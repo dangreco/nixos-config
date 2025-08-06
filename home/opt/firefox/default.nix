@@ -5,7 +5,9 @@
   ...
 }:
 let
-  cfg = config.opt.firefox;
+  id = "firefox";
+  name = "Firefox";
+  cfg = config.opt.${id};
 in
 {
   imports = [
@@ -13,17 +15,10 @@ in
   ];
 
   options = {
-    opt.firefox = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Enable Firefox";
-      };
-      package = lib.mkOption {
-        type = lib.types.nullOr lib.types.package;
-        default = _.pkgs.stable.firefox;
-        description = "Firefox package to use";
-      };
+    opt.${id} = {
+      enable = lib.mkEnableOption name;
+      package = lib.mkPackageOption _.pkgs.stable id { };
+
       languagePacks = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [ "en_CA" ];

@@ -5,17 +5,12 @@
   ...
 }:
 let
-  cfg = config.opt.gnome;
+  id = "gnome";
+  cfg = config.opt.${id};
 in
 {
   options = {
-    opt.gnome = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Enable Gnome settings";
-      };
-
+    opt.${id} = {
       features = {
         fractionalScaling = lib.mkOption {
           type = lib.types.bool;
@@ -78,7 +73,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf _.config.opt.system.gnome.enable {
     dconf.settings = {
       "org/gnome/desktop/interface" = {
         show-battery-percentage = cfg.ui.battery;

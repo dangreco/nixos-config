@@ -5,34 +5,23 @@
   ...
 }:
 let
-  cfg = config.opt.programs._1password;
+  id = "op";
+  name = "1Password";
+  cfg = config.opt.programs.${id};
 in
 {
   options = {
-    opt.programs._1password = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-      };
+    opt.programs.${id} = {
+      enable = lib.mkEnableOption name;
+
       gui = {
-        enable = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-        };
-        package = lib.mkOption {
-          type = lib.types.nullOr lib.types.package;
-          default = _.pkgs.stable._1password-gui;
-        };
+        enable = lib.mkEnableOption "${name} GUI";
+        package = lib.mkPackageOption _.pkgs.stable "_1password-gui" { };
       };
+
       cli = {
-        enable = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-        };
-        package = lib.mkOption {
-          type = lib.types.nullOr lib.types.package;
-          default = _.pkgs.stable._1password-cli;
-        };
+        enable = lib.mkEnableOption "${name} CLI";
+        package = lib.mkPackageOption _.pkgs.stable "_1password-cli" { };
       };
     };
   };
