@@ -20,8 +20,8 @@
   };
 
   opt.gnome = {
-    features.fractionalScaling = true;
-    features.variableRefreshRate = true;
+    features.fractionalScaling.enable = true;
+    features.variableRefreshRate.enable = true;
 
     shortcuts.custom = [
       {
@@ -35,6 +35,19 @@
         binding = "<Super>t";
       }
     ];
+
+    ui = {
+      wallpaper.default.enable = true;
+
+      avatar = {
+        type = "gravatar";
+        options = {
+          email = "me@dangre.co";
+          size = 512;
+          frequency = "weekly";
+        };
+      };
+    };
   };
 
   opt.gpg.enable = true;

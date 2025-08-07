@@ -1,10 +1,57 @@
 {
+  nixpkgs-stable,
+  nixpkgs-unstable,
   nixos-hardware,
   home-manager,
   ...
 }@inputs:
 hosts:
 let
+  lib = nixpkgs-stable.lib;
+
+  mkPkgs = system: {
+    stable = (
+      import nixpkgs-stable {
+        inherit system;
+        config.allowUnfree = true;
+      }
+    );
+    unstable = (
+      import nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      }
+    );
+  };
+
+  hmFor =
+    users: _:
+    { config, ... }:
+    {
+      imports = [ home-manager.nixosModules.home-manager ];
+      home-manager = {
+        useGlobalPkgs = true;
+        useUserPackages = true;
+        backupFileExtension = "bkp";
+        extraSpecialArgs = {
+          _ = _ // {
+            inherit config;
+          };
+        };
+        users = lib.genAttrs users (user: {
+          _module.args = { inherit _ user; };
+
+          home.username = user;
+          home.homeDirectory = "/home/${user}";
+          home.stateVersion = "25.05";
+          imports = [
+            ../home
+            ../home/_per/${user}
+          ];
+        });
+      };
+    };
+
   mkHost =
     name:
     {
@@ -13,66 +60,30 @@ let
       users ? [ ],
     }:
     let
-      _.lib = import ../lib inputs;
-      _.pkgs = {
-        stable = _.lib.mkPkgs system inputs.nixpkgs-stable;
-        unstable = _.lib.mkPkgs system inputs.nixpkgs-unstable;
+      pkgs = mkPkgs system;
+      _ = {
+        lib = import ../lib inputs;
+        inherit pkgs;
       };
-    in
-    inputs.nixpkgs-stable.lib.nixosSystem {
-      inherit system;
-      specialArgs = { inherit _; };
-      modules =
-        # modules
-        [ ../modules ]
 
-        # host-specific
-        ++ [
+      modules = {
+        base = [ ../modules ];
+        host = [
           ./_per/${name}
           {
             networking.hostName = name;
             nixpkgs.hostPlatform = system;
           }
-        ]
-
-        # model-specific
-        ++ (if model != null then [ nixos-hardware.nixosModules.${model} ] else [ ])
-
-        # system users
-        ++ builtins.map (user: ../users/_per/${user}) users
-
-        # home manager
-        ++ [
-          (
-            { config, ... }:
-            {
-              imports = [ home-manager.nixosModules.home-manager ];
-              home-manager.extraSpecialArgs = {
-                _ = _ // {
-                  inherit config;
-                };
-              };
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.backupFileExtension = "bkp";
-              home-manager.users = builtins.listToAttrs (
-                builtins.map (user: {
-                  name = user;
-                  value = {
-                    home.username = user;
-                    home.homeDirectory = "/home/${user}";
-                    home.stateVersion = "25.05";
-
-                    imports = [
-                      ../home
-                      ../home/_per/${user}
-                    ];
-                  };
-                }) users
-              );
-            }
-          )
         ];
+        model = lib.optionals (model != null) [ nixos-hardware.nixosModules.${model} ];
+        user = map (user: ../users/_per/${user}) users;
+        hm = [ (hmFor users _) ];
+      };
+    in
+    inputs.nixpkgs-stable.lib.nixosSystem {
+      inherit system;
+      specialArgs = { inherit _; };
+      modules = builtins.foldl' (ms: ms': ms ++ ms') [ ] (builtins.attrValues modules);
     };
 in
 builtins.mapAttrs mkHost hosts

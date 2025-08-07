@@ -1,85 +1,28 @@
 {
   _,
   lib,
-  config,
   ...
 }:
 let
-  id = "gnome";
-  cfg = config.opt.${id};
+  enable = _.config.opt.system.gnome.enable;
 in
 {
-  options = {
-    opt.${id} = {
-      features = {
-        fractionalScaling = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-        };
-        variableRefreshRate = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-        };
-      };
+  imports = lib.optionals enable [
+    ./features
+    ./shortcuts
+    ./ui
+  ];
 
-      ui = {
-        battery = lib.mkOption {
-          type = lib.types.bool;
-          default = true;
-        };
-        buttons = lib.mkOption {
-          type = lib.types.str;
-          default = ":minimize,maximize,close";
-        };
-      };
+  options = { };
 
-      shortcuts = {
-        desktop = {
-          show = lib.mkOption {
-            type = lib.types.str;
-            default = "<Super>d";
-          };
-        };
-        window = {
-          center = lib.mkOption {
-            type = lib.types.str;
-            default = "<Super>c";
-          };
-          close = lib.mkOption {
-            type = lib.types.str;
-            default = "<Super>q";
-          };
-        };
-
-        custom = lib.mkOption {
-          type = lib.types.listOf (
-            lib.types.submodule {
-              options = {
-                name = lib.mkOption {
-                  type = lib.types.str;
-                };
-                command = lib.mkOption {
-                  type = lib.types.str;
-                };
-                binding = lib.mkOption {
-                  type = lib.types.str;
-                };
-              };
-            }
-          );
-          default = [ ];
-        };
-      };
-    };
-  };
-
-  config = lib.mkIf _.config.opt.system.gnome.enable {
+  config = lib.mkIf enable {
+    # sensible defaults
     dconf.settings = {
-      "org/gnome/desktop/interface" = {
-        show-battery-percentage = cfg.ui.battery;
-      };
       "org/gnome/desktop/wm/preferences" = {
-        button-layout = cfg.ui.buttons;
+        button-layout = ":minimize,maximize,close";
+      };
+      "org/gnome/desktop/interface" = {
+        show-battery-percentage = true;
       };
       "org/gnome/settings-daemon/plugins/power" = {
         power-saver-profile-on-low-battery = true;
@@ -93,19 +36,6 @@ in
       "org/gnome/desktop/peripherals/touchpad" = {
         tap-to-click = false;
       };
-      "org/gnome/mutter" = {
-        experimental-features = lib.gvariant.mkArray (
-          [ ]
-          ++ lib.optionals cfg.features.fractionalScaling [ "scale-monitor-framebuffer" ]
-          ++ lib.optionals cfg.features.variableRefreshRate [ "variable-refresh-rate" ]
-        );
-      };
-      "org/gnome/desktop/wm/keybindings" = {
-        move-to-center = lib.gvariant.mkArray [ cfg.shortcuts.window.center ];
-        close = lib.gvariant.mkArray [ cfg.shortcuts.window.close ];
-        show-desktop = lib.gvariant.mkArray [ cfg.shortcuts.desktop.show ];
-      };
-    }
-    // _.lib.mkKeyBindings cfg.shortcuts.custom;
+    };
   };
 }
